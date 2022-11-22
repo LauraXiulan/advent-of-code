@@ -1,10 +1,12 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-Console.WriteLine("Hello, World!");
-var yearOptions = new List<string>
-{
-    "2022"
-};
+using System.Text.RegularExpressions;
+
+var dir = Path.Combine(Directory.GetCurrentDirectory() + "../../../../../AdventOfCode");
+var directories = Directory.EnumerateDirectories(dir);
+var years = directories
+    .Select(d => d[(dir.Length + 1)..])
+    .Where(d => Regex.IsMatch(d, Year().ToString()));
 
 var dayOptions = new List<string>
 {
@@ -24,9 +26,9 @@ var tests = AnsiConsole.Prompt(
         .Required()
         .InstructionsText(
             "Press space to toggle the options, " +
-            "enter to accept." +
+            "enter to accept. " +
             "Choosing a group will select all options.")
-        .AddChoiceGroup("Year", yearOptions)
+        .AddChoiceGroup("Year", years)
         .AddChoiceGroup("Day", dayOptions)
         .AddChoiceGroup("Part", partOptions));
 
@@ -35,36 +37,8 @@ foreach (string test in tests)
     AnsiConsole.WriteLine(test);
 }
 
-//// Store key info in here
-//ConsoleKeyInfo keyinfo;
-//do
-//{
-//    keyinfo = Console.ReadKey();
-
-//    // Handle each key input (down arrow will write the menu again with a different selected item)
-//    if (keyinfo.Key == ConsoleKey.DownArrow)
-//    {
-//        if (index + 1 < options.Count)
-//        {
-//            index++;
-//            WriteMenu(options, options[index]);
-//        }
-//    }
-//    if (keyinfo.Key == ConsoleKey.UpArrow)
-//    {
-//        if (index - 1 >= 0)
-//        {
-//            index--;
-//            WriteMenu(options, options[index]);
-//        }
-//    }
-//    // Handle different action for the option
-//    if (keyinfo.Key == ConsoleKey.Enter)
-//    {
-//        options[index].Selected.Invoke();
-//        index = 0;
-//    }
-//}
-//while (keyinfo.Key != ConsoleKey.X);
-
-//Console.ReadKey();
+partial class Program
+{
+    [GeneratedRegex("^([0-9]{4})$", RegexOptions.Compiled)]
+    private static partial Regex Year();
+}
