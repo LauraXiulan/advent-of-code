@@ -11,8 +11,6 @@ public abstract class Day
     public string Input { get; }
     public abstract string Example { get; }
 
-    public abstract int One();
-    public abstract int One_Example();
-    public abstract int Two();
-    public abstract int Two_Example();
+    public abstract long One();
+    public abstract long Two(); // return type long
 }

@@ -5,16 +5,16 @@ public class Day01 : Day
     public override string Example => "199;200;208;210;200;207;240;269;260;263";
 
     [Test(ExpectedResult = 7)]
-    public override int One_Example() => One(Example);
+    public int One_Example() => One(Example);
 
     [Test(ExpectedResult = 1548)]
-    public override int One() => One(Input);
+    public override long One() => One(Input);
 
     [Test(ExpectedResult = 5)]
-    public override int Two_Example() => Two(Example);
+    public int Two_Example() => Two(Example);
 
     [Test(ExpectedResult = 1589)]
-    public override int Two() => Two(Input);
+    public override long Two() => Two(Input);
 
     private static int One(string input)
     {
