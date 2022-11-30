@@ -42,7 +42,6 @@ public class Day04 : Day
         var drawn = blocks[0][0].Int32s().ToArray();
 
         var cards = blocks.Skip(1)
-            .Take(blocks.Length - 1)
             .Select(entries => new BingoCard(entries
                 .SelectMany(entries => entries.Int32s().ToArray())
                 .ToArray()))
@@ -69,7 +68,6 @@ public class Day04 : Day
         var drawn = blocks[0][0].Int32s().ToArray();
 
         var cards = blocks.Skip(1)
-            .Take(blocks.Length - 1)
             .Select(entries => new BingoCard(entries
                 .SelectMany(entries => entries.Int32s().ToArray())
                 .ToArray()))
