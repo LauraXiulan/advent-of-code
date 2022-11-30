@@ -36,9 +36,12 @@ public static partial class Text
         }
     }
 
-    public static IEnumerable<int> Int32s(this string str)
-        => NotADigit().Replace(str, ";").Lines(int.Parse);
+    public static int SumBinaryStringArray(this string[] array, int index) => array.Sum(i => int.Parse(i[index].ToString()));
 
-    [GeneratedRegex("[^\\d]")]
+    public static int BinaryStringToInt(this string binary) => Convert.ToInt32(binary, 2);
+
+    public static IEnumerable<int> Int32s(this string str) => NotADigit().Split(str).Select(int.Parse);
+
+    [GeneratedRegex("[^\\d]+")]
     private static partial Regex NotADigit();
 }
