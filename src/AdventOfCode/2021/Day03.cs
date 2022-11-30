@@ -27,7 +27,7 @@ public class Day03 : Day
 
         while (index < binaries[0].Length)
         {
-            var sum = binaries.SumCharArray(index);
+            var sum = binaries.SumBinaryStringArray(index);
             var oneMostOccuring = sum > (binaries.Length / 2);
             gamma += oneMostOccuring ? "1" : "0";
             epsilon += oneMostOccuring ? "0" : "1";
@@ -35,7 +35,7 @@ public class Day03 : Day
             index++;
         }
 
-        return gamma.ToInt() * epsilon.ToInt();
+        return gamma.BinaryStringToInt() * epsilon.BinaryStringToInt();
     }
 
     private static int Two(string input)
@@ -63,9 +63,9 @@ public class Day03 : Day
             index++;
         }
 
-        return oxygenRating.First().ToInt() * scrubberRating.First().ToInt();
+        return oxygenRating.First().BinaryStringToInt() * scrubberRating.First().BinaryStringToInt();
     }
 
     private static string MostOccuring(string[] array, int index)
-        => array.SumCharArray(index) >= ((decimal)array.Length / 2) ? "1" : "0";
+        => array.SumBinaryStringArray(index) >= ((decimal)array.Length / 2) ? "1" : "0";
 }
