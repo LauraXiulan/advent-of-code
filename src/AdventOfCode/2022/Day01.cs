@@ -2,9 +2,61 @@
 
 public class Day01 : Day
 {
-    public override string Example => throw new NotImplementedException();
+    public override string Example => @"1000
+2000
+3000
 
-    public override long One() => throw new NotImplementedException();
+4000
 
-    public override long Two() => throw new NotImplementedException();
+5000
+6000
+
+7000
+8000
+9000
+
+10000";
+
+    [Test(ExpectedResult = 24000)]
+    public int One_Example() => One(Example);
+
+    [Test(ExpectedResult = 67622)]
+    public override long One() => One(Input);
+
+    [Test(ExpectedResult = 45000)]
+    public int Two_Example() => Two(Example);
+
+    [Test(ExpectedResult = 201491)]
+    public override long Two() => Two(Input);
+
+    private static int One(string input)
+    {
+        var calories = input.GroupedLines().ToArray();
+        var sum = 0;
+
+        for (int i = 0; i < calories.Length; i++)
+        {
+            var summed = calories[i].Select(int.Parse).Sum();
+            sum = summed > sum ? summed : sum;
+        }
+
+        return sum;
+    }
+
+    private static int Two(string input)
+    {
+        var calories = input.GroupedLines().ToArray();
+
+        var sum = new List<int>();
+
+        for (int i = 0; i < calories.Length; i++)
+        {
+            var summed = calories[i].Select(int.Parse).Sum();
+            sum.Add(summed);
+        }
+
+        sum.Sort();
+        sum.Reverse();
+        return sum.Take(3).Sum();
+    }
 }
