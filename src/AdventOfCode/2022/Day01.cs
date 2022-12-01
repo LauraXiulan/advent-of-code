@@ -29,34 +29,7 @@ public class Day01 : Day
     [Test(ExpectedResult = 201491)]
     public override long Two() => Two(Input);
 
-    private static int One(string input)
-    {
-        var calories = input.GroupedLines().ToArray();
-        var sum = 0;
+    private static int One(string input) => input.GroupedLines().Select(c => c.SelectMany(cl => cl.Int32s()).Sum()).Max();
 
-        for (int i = 0; i < calories.Length; i++)
-        {
-            var summed = calories[i].Select(int.Parse).Sum();
-            sum = summed > sum ? summed : sum;
-        }
-
-        return sum;
-    }
-
-    private static int Two(string input)
-    {
-        var calories = input.GroupedLines().ToArray();
-
-        var sum = new List<int>();
-
-        for (int i = 0; i < calories.Length; i++)
-        {
-            var summed = calories[i].Select(int.Parse).Sum();
-            sum.Add(summed);
-        }
-
-        sum.Sort();
-        sum.Reverse();
-        return sum.Take(3).Sum();
-    }
+    private static int Two(string input) => input.GroupedLines().Select(c => c.SelectMany(cl => cl.Int32s()).Sum()).OrderByDescending(i => i).Take(3).Sum();
 }
