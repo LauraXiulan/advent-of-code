@@ -25,8 +25,8 @@ C Z";
     public override long Two() => Two(Input);
 
     private static int One(string input)
-        => input.GroupedLines()
-            .Select(s => s.Select(st => st switch
+        => input.Lines()
+            .Select(s => s switch
             {
                 // A = Rock, B = Paper, C = Scissors, X = Rock (1), Y = Paper (2), Z = Scissors (3)
                 // Lost = 0, Draw = 3, Win = 6
@@ -40,11 +40,11 @@ C Z";
                 "C Y" => 2,
                 "C Z" => 6,
                 _ => 0
-            }).Sum()).ToArray().Sum();
+            }).Sum();
 
     private static int Two(string input)
-        => input.GroupedLines()
-            .Select(s => s.Select(st => st switch
+        => input.Lines()
+            .Select(s => s switch
             {
                 // A = Rock (1), B = Paper (2), C = Scissors (3), X = Lose, Y = Draw, Z = Win
                 // Lost = 1, Draw = 3, Win = 5
@@ -58,5 +58,5 @@ C Z";
                 "C Y" => 6,
                 "C Z" => 7,
                 _ => 0
-            }).Sum()).ToArray().Sum();
+            }).Sum();
 }
