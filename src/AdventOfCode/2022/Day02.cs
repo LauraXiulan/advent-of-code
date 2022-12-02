@@ -45,7 +45,7 @@ C Z";
         => input.Lines(s => s switch
         {
             // A = Rock (1), B = Paper (2), C = Scissors (3), X = Lose, Y = Draw, Z = Win
-            // Lost = 1, Draw = 3, Win = 5
+            // Lost = 0, Draw = 3, Win = 6
             "A X" => 3,
             "A Y" => 4,
             "A Z" => 8,
