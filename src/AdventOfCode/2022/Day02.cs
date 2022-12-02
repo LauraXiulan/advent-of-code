@@ -25,38 +25,36 @@ C Z";
     public override long Two() => Two(Input);
 
     private static int One(string input)
-        => input.Lines()
-            .Select(s => s switch
-            {
-                // A = Rock, B = Paper, C = Scissors, X = Rock (1), Y = Paper (2), Z = Scissors (3)
-                // Lost = 0, Draw = 3, Win = 6
-                "A X" => 4,
-                "A Y" => 8,
-                "A Z" => 3,
-                "B X" => 1,
-                "B Y" => 5,
-                "B Z" => 9,
-                "C X" => 7,
-                "C Y" => 2,
-                "C Z" => 6,
-                _ => 0
-            }).Sum();
+        => input.Lines(s => s switch
+        {
+            // A = Rock, B = Paper, C = Scissors, X = Rock (1), Y = Paper (2), Z = Scissors (3)
+            // Lost = 0, Draw = 3, Win = 6
+            "A X" => 4,
+            "A Y" => 8,
+            "A Z" => 3,
+            "B X" => 1,
+            "B Y" => 5,
+            "B Z" => 9,
+            "C X" => 7,
+            "C Y" => 2,
+            "C Z" => 6,
+            _ => 0
+        }).Sum();
 
     private static int Two(string input)
-        => input.Lines()
-            .Select(s => s switch
-            {
-                // A = Rock (1), B = Paper (2), C = Scissors (3), X = Lose, Y = Draw, Z = Win
-                // Lost = 1, Draw = 3, Win = 5
-                "A X" => 3,
-                "A Y" => 4,
-                "A Z" => 8,
-                "B X" => 1,
-                "B Y" => 5,
-                "B Z" => 9,
-                "C X" => 2,
-                "C Y" => 6,
-                "C Z" => 7,
-                _ => 0
-            }).Sum();
+        => input.Lines(s => s switch
+        {
+            // A = Rock (1), B = Paper (2), C = Scissors (3), X = Lose, Y = Draw, Z = Win
+            // Lost = 1, Draw = 3, Win = 5
+            "A X" => 3,
+            "A Y" => 4,
+            "A Z" => 8,
+            "B X" => 1,
+            "B Y" => 5,
+            "B Z" => 9,
+            "C X" => 2,
+            "C Y" => 6,
+            "C Z" => 7,
+            _ => 0
+        }).Sum();
 }
