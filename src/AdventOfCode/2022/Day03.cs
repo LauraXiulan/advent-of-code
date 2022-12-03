@@ -23,7 +23,7 @@ public class Day03 : Day
     public override long Two() => Two(Input);
 
     private static int One(string input)
-        => input.Lines().Select(item =>
+        => input.Lines(item =>
         {
             var firstPart = item[..(item.Length / 2)];
             var secondPart = item[(item.Length / 2)..];
