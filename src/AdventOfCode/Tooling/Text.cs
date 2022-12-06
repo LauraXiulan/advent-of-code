@@ -40,8 +40,14 @@ public static partial class Text
 
     public static int BinaryStringToInt(this string binary) => Convert.ToInt32(binary, 2);
 
-    public static IEnumerable<int> Int32s(this string str) => NotADigit().Split(str).Select(int.Parse);
+    public static IEnumerable<int> Int32s(this string str) => NotADigit().Split(str).Where(s => s.Any()).Select(int.Parse);
+    public static IEnumerable<int> Int32s(this IEnumerable<string> stringSet) => stringSet.SelectMany(str => NotADigit().Split(str).Where(s => s.Any()).Select(int.Parse));
 
-    [GeneratedRegex("[^\\d]+")]
+    [GeneratedRegex("[^0-9]+")]
     private static partial Regex NotADigit();
+
+    public static IReadOnlyList<string> SplitInHalf(this string str) => str.Insert(str.Length / 2, ";").Lines();
+
+    // a-z = 1-26 A-Z = 27-52
+    public static int CharToIntRepresentation(this char character) => char.IsLower(character) ? character - 96 : character - 64 + 26;
 }
