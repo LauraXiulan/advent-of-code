@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace AdventOfCode._2022;
 
-namespace AdventOfCode._2022;
-
-public class Day02 : Day
+public class Day02 : Day<int, int>
 {
     public override string Example => @"A Y
 B X
@@ -16,45 +10,41 @@ C Z";
     public int One_Example() => One(Example);
 
     [Test(ExpectedResult = 14163)]
-    public override long One() => One(Input);
+    public override int One() => One(Input);
 
     [Test(ExpectedResult = 12)]
     public int Two_Example() => Two(Example);
 
     [Test(ExpectedResult = 12091)]
-    public override long Two() => Two(Input);
+    public override int Two() => Two(Input);
 
     private static int One(string input)
         => input.Lines(s => s switch
         {
-            // A = Rock, B = Paper, C = Scissors, X = Rock (1), Y = Paper (2), Z = Scissors (3)
-            // Lost = 0, Draw = 3, Win = 6
-            "A X" => 4,
-            "A Y" => 8,
-            "A Z" => 3,
-            "B X" => 1,
-            "B Y" => 5,
-            "B Z" => 9,
-            "C X" => 7,
-            "C Y" => 2,
-            "C Z" => 6,
+            "A X" => 1 + 3,
+            "A Y" => 2 + 6,
+            "A Z" => 3 + 0,
+            "B X" => 1 + 0,
+            "B Y" => 2 + 3,
+            "B Z" => 3 + 6,
+            "C X" => 1 + 6,
+            "C Y" => 2 + 0,
+            "C Z" => 3 + 3,
             _ => 0
         }).Sum();
 
     private static int Two(string input)
         => input.Lines(s => s switch
         {
-            // A = Rock (1), B = Paper (2), C = Scissors (3), X = Lose, Y = Draw, Z = Win
-            // Lost = 0, Draw = 3, Win = 6
-            "A X" => 3,
-            "A Y" => 4,
-            "A Z" => 8,
-            "B X" => 1,
-            "B Y" => 5,
-            "B Z" => 9,
-            "C X" => 2,
-            "C Y" => 6,
-            "C Z" => 7,
+            "A X" => 3 + 0,
+            "A Y" => 1 + 3,
+            "A Z" => 2 + 6,
+            "B X" => 1 + 0,
+            "B Y" => 2 + 3,
+            "B Z" => 3 + 6,
+            "C X" => 2 + 0,
+            "C Y" => 3 + 3,
+            "C Z" => 1 + 6,
             _ => 0
         }).Sum();
 }

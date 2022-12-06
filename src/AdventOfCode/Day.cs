@@ -1,6 +1,6 @@
 ﻿namespace AdventOfCode;
 
-public abstract class Day
+public abstract class Day<TOne, TTwo>
 {
     public Day()
     {
@@ -11,6 +11,6 @@ public abstract class Day
     public string Input { get; }
     public abstract string Example { get; }
 
-    public abstract long One();
-    public abstract long Two(); // return type long
+    public abstract TOne One();
+    public abstract TTwo Two();
 }

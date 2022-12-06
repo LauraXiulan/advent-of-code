@@ -1,8 +1,6 @@
-﻿using System;
+﻿namespace AdventOfCode._2021;
 
-namespace AdventOfCode._2021;
-
-public class Day03 : Day
+public class Day03 : Day<int, int>
 {
     public override string Example => "00100;11110;10110;10111;10101;01111;00111;11100;10000;11001;00010;01010";
 
@@ -10,13 +8,13 @@ public class Day03 : Day
     public int One_Example() => One(Example);
 
     [Test(ExpectedResult = 3549854)]
-    public override long One() => One(Input);
+    public override int One() => One(Input);
 
     [Test(ExpectedResult = 230)]
     public int Two_Example() => Two(Example);
 
     [Test(ExpectedResult = 3765399)]
-    public override long Two() => Two(Input);
+    public override int Two() => Two(Input);
 
     private static int One(string input)
     {

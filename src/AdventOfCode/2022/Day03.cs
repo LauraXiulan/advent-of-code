@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace AdventOfCode._2022;
 
-namespace AdventOfCode._2022;
-
-public class Day03 : Day
+public class Day03 : Day<int, int>
 {
     public override string Example => "vJrwpWtwJgWrhcsFMMfFFhFp;jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL;PmmdzqPrVvPwwTWBwg;wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn;ttgJtRGJQctTZtZT;CrZsJsPPZsGzwwsLwLmpwMDw";
 
@@ -14,22 +8,21 @@ public class Day03 : Day
     public int One_Example() => One(Example);
 
     [Test(ExpectedResult = 7737)]
-    public override long One() => One(Input);
+    public override int One() => One(Input);
 
     [Test(ExpectedResult = 70)]
     public int Two_example() => Two(Example);
 
     [Test(ExpectedResult = 2697)]
-    public override long Two() => Two(Input);
+    public override int Two() => Two(Input);
 
     private static int One(string input)
         => input.Lines(item =>
         {
-            var firstPart = item[..(item.Length / 2)];
-            var secondPart = item[(item.Length / 2)..];
-            var equalPart = firstPart.Intersect(secondPart).First();
+            var splitted = item.SplitInHalf();
+            var equalPart = splitted[0].Intersect(splitted[1]).First();
 
-            return char.IsLower(equalPart) ? equalPart - 96 : equalPart - 64 + 26;
+            return equalPart.CharToIntRepresentation();
         }).Sum();
 
     private static int Two(string input)
@@ -43,7 +36,7 @@ public class Day03 : Day
             var group = rucksacks.Skip(index).Take(3);
             var equalPart = group.First().Intersect(group.ElementAt(1)).Intersect(group.Last()).First();
 
-            sum += char.IsLower(equalPart) ? equalPart - 96 : equalPart - 64 + 26;
+            sum += equalPart.CharToIntRepresentation();
             index += 3;
         }
 

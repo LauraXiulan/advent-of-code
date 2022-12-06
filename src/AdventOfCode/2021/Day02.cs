@@ -1,6 +1,6 @@
 ﻿namespace AdventOfCode._2021;
 
-public class Day02 : Day
+public class Day02 : Day<int, int>
 {
     public override string Example => "forward 5;down 5;forward 8;up 3;down 8;forward 2";
 
@@ -8,13 +8,13 @@ public class Day02 : Day
     public int One_Example() => One(Example);
 
     [Test(ExpectedResult = 2215080)]
-    public override long One() => One(Input);
+    public override int One() => One(Input);
 
     [Test(ExpectedResult = 900)]
     public int Two_Example() => Two(Example);
 
     [Test(ExpectedResult = 1864715580)]
-    public override long Two() => Two(Input);
+    public override int Two() => Two(Input);
 
     private static int One(string input)
     {
