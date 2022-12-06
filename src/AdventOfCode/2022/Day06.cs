@@ -16,65 +16,15 @@ public class Day06 : Day<int, int>
     [Test(ExpectedResult = 2950)]
     public override int Two() => Two(Input);
 
-    private static int One(string input)
+    private static int One(string input) => FindDistinct(input, 4);
+    private static int Two(string input) => FindDistinct(input, 14);
+
+    private static int FindDistinct(string input, int distinct)
+        => Enumerable.Range(0, input.Length).First(index => AllDistinct(input, distinct, index)) + distinct;
+
+    private static bool AllDistinct(string input, int distinct, int index)
     {
-        var index = 0;
-        var answer = 0;
-        var distinct = 4;
-
-        while (index < input.Length)
-        {
-            var characters = input.Skip(index).Take(distinct);
-            var list = new List<char>();
-
-            foreach (var ch in characters)
-            {
-                if (!list.Contains(ch))
-                {
-                    list.Add(ch);
-                }
-            }
-
-            if (list.Count == distinct)
-            {
-                answer = index + distinct;
-                break;
-            }
-            index++;
-        }
-
-        return answer;
-    }
-    private static int Two(string input)
-    {
-        var index = 0;
-        var answer = 0;
-        var distinct = 14;
-
-        while (index < input.Length)
-        {
-            var characters = input.Skip(index).Take(distinct);
-            var list = new List<char>();
-
-            foreach (var ch in characters)
-            {
-                if (!list.Contains(ch))
-                {
-                    list.Add(ch);
-                }
-            }
-
-            if (list.Count == distinct)
-            {
-                answer = index + distinct;
-                index = input.Length;
-            }
-            else
-            {
-                index++;
-            }
-        }
-
-        return answer;
+        var list = new HashSet<char>();
+        return input.Skip(index).Take(distinct).All(list.Add);
     }
 }
