@@ -41,6 +41,7 @@ public static partial class Text
     public static int BinaryStringToInt(this string binary) => Convert.ToInt32(binary, 2);
 
     public static IEnumerable<int> Int32s(this string str) => NotADigit().Split(str).Where(s => s.Any()).Select(int.Parse);
+    public static IEnumerable<long> ToLong(this string str) => NotADigit().Split(str).Where(s => s.Any()).Select(long.Parse);
     public static IEnumerable<int> Int32s(this IEnumerable<string> stringSet) => stringSet.SelectMany(str => NotADigit().Split(str).Where(s => s.Any()).Select(int.Parse));
 
     [GeneratedRegex("[^0-9]+")]
