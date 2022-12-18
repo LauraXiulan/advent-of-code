@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Numerics;
-
-namespace AdventOfCode._2022;
+﻿namespace AdventOfCode._2022;
 
 public class Day11 : Day<long, long>
 {
