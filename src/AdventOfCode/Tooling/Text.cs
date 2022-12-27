@@ -42,13 +42,24 @@ public static partial class Text
 
     public static IEnumerable<int> Int32s(this string str) => NotADigit().Split(str).Where(s => s.Any()).Select(int.Parse);
     public static IEnumerable<long> ToLong(this string str) => NotADigit().Split(str).Where(s => s.Any()).Select(long.Parse);
+    public static IEnumerable<decimal> ToDecimal(this string str) => NotADigit().Split(str).Where(s => s.Any()).Select(decimal.Parse);
     public static IEnumerable<int> Int32s(this IEnumerable<string> stringSet) => stringSet.SelectMany(str => NotADigit().Split(str).Where(s => s.Any()).Select(int.Parse));
 
-    [GeneratedRegex("[^0-9]+")]
+    [GeneratedRegex("[^-0-9]+")]
     private static partial Regex NotADigit();
 
     public static IReadOnlyList<string> SplitInHalf(this string str) => str.Insert(str.Length / 2, ";").Lines();
 
     // a-z = 1-26 A-Z = 27-52
     public static int CharToIntRepresentation(this char character) => char.IsLower(character) ? character - 96 : character - 64 + 26;
+
+    public static IEnumerable<string> Alphabetic(this string str) => NotAlphabetic().Split(str).Where(s => s.Any());
+
+    [GeneratedRegex("[^a-zA-z]+")]
+    private static partial Regex NotAlphabetic();
+
+    public static IEnumerable<string> Operator(this string str) => NotAnOperator().Split(str).Where(s => s.Any());
+
+    [GeneratedRegex("[^*/+-]+")]
+    private static partial Regex NotAnOperator();
 }

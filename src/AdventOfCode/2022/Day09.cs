@@ -56,7 +56,7 @@ public record RopeBridge
         Tails = Enumerable.Range(0, size).Select(r => new List<string> { "200,250" }).ToArray();
     }
 
-    public List<string> Head { get; } = new List<string> { "200,250" };
+    public List<string> Head { get; } = new List<string> { "200,250" }; // Vector instead of string list!
     public List<string>[] Tails { get; } = Array.Empty<List<string>>();
 
     public void Move(string input)
@@ -97,7 +97,7 @@ public record RopeBridge
         Head.Add($"{x},{y}");
 
         var index = 0;
-        var prev = Head.Last().Split(",").Int32s().ToArray(); ;
+        var prev = Head.Last().Split(",").Int32s().ToArray();
         while (index < Tails.Length)
         {
             var current = Tails[index].Last().Split(",").Int32s().ToArray();
