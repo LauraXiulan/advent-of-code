@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json.Bson;
-
-namespace AdventOfCode._2022;
+﻿namespace AdventOfCode._2022;
 
 public class Day21 : Day<long, long>
 {
@@ -29,23 +27,15 @@ hmdt: 32";
     [Test(ExpectedResult = 301)]
     public long Two_Example() => Two(Example);
 
-    [Test(ExpectedResult = 2508)]
+    [Test(ExpectedResult = 3952288690726)]
     public override long Two() => Two(Input);
 
-    private static long One(string input)
-    {
-        var monkeys = input.Lines(Monkey.Parse);
-        var outcome = Outcome(monkeys);
-
-        return outcome;
-    }
+    private static long One(string input) => Outcome(input.Lines(Monkey.Parse));
 
     private static long Two(string input)
     {
         var monkeys = input.Lines(Monkey.Parse);
-        var outcome = OutcomeTwo(monkeys);
-
-        return outcome;
+        return GetHumnValue(monkeys.First(m => m.Name == "root"), monkeys, 0);
     }
 
     record Monkey(string Name, long Number, string? Expression)
@@ -55,33 +45,49 @@ hmdt: 32";
         {
             var colon = input.IndexOf(':');
             var name = input[0..colon];
-            if (long.TryParse(input[(colon + 1)..], out long number))
-            {
-                return new(name, number, null);
-            }
-            return new(name, 0, input[(colon + 1)..]);
+            return long.TryParse(input[(colon + 1)..], out long number)
+                ? (new(name, number, null))
+                : (new(name, 0, input[(colon + 1)..]));
         }
 
-        public string[] MonkeysNeeded() => Expression?.Alphabetic().ToArray() ?? Array.Empty<string>();
+        public NeededMonkeys Needed(IEnumerable<Monkey> monkeys)
+            => Expression is null ? NeededMonkeys.Empty : new(Expression.Alphabetic(), monkeys);
+
+        public static Monkey Empty => new("", 0, null);
+    }
+
+    record NeededMonkeys(Monkey A, Monkey B)
+    {
+        public NeededMonkeys(string a, string b, IEnumerable<Monkey> monkeys)
+            : this(monkeys.First(m => m.Name == a), monkeys.First(m => m.Name == b)) { }
+
+        public NeededMonkeys(IEnumerable<string> needed, IEnumerable<Monkey> monkeys)
+            : this(needed.First(), needed.Last(), monkeys) { }
+
+        public static NeededMonkeys Empty => new(Monkey.Empty, Monkey.Empty);
+
+        public bool IsEmpty => this == Empty;
+
+        public string[] Names => new[] { A.Name, B.Name };
+
+        public void Resolve(Queue<Monkey> queue, Monkey current, Dictionary<string, long> input)
+        {
+            if (IsEmpty) return;
+            if (Names.All(m => input.TryGetValue(m, out long _)))
+                input.Add(current.Name, Solve(current, input[A.Name], input[B.Name]));
+            else queue.Enqueue(current);
+        }
     }
 
     private static long Outcome(IEnumerable<Monkey> monkeys)
     {
         var input = new Dictionary<string, long>();
-        var queue = new Queue<Monkey>();
-
-        foreach (var monkey in monkeys)
-        {
-            queue.Enqueue(monkey);
-        }
+        var queue = new Queue<Monkey>(monkeys);
 
         while (queue.Any())
         {
             var current = queue.Dequeue();
-            if (current.Outcome > 0)
-            {
-                continue;
-            }
+            if (current.Outcome > 0) continue;
             if (current.Number > 0)
             {
                 current.Outcome = current.Number;
@@ -89,307 +95,60 @@ hmdt: 32";
                 continue;
             }
 
-            var monkeysNeeded = current.MonkeysNeeded();
-            if (monkeysNeeded.All(m => input.TryGetValue(m, out long _)))
-            {
-                var outcome = Solve(current, input[monkeysNeeded.First()], input[monkeysNeeded.Last()]);
-                input.Add(current.Name, outcome);
-            }
-            else
-            {
-                queue.Enqueue(current);
-            }
+            current.Needed(monkeys).Resolve(queue, current, input);
         }
 
         return input["root"];
     }
 
-    private static long GetHumnValue(Monkey monkey, IEnumerable<Monkey> monkeys)
+    private static long GetHumnValue(Monkey monkey, IEnumerable<Monkey> monkeys, long val)
     {
-        var monkeysNeeded = monkey.MonkeysNeeded();
-        var firstMonkey = monkeys.First(m => m.Name == monkeysNeeded.First());
-        var secondMonkey = monkeys.First(m => m.Name == monkeysNeeded.Last());
-        var first = GetValue(firstMonkey, monkeys);
-        var last = GetValue(secondMonkey, monkeys);
+        var needed = monkey.Needed(monkeys);
+        var a = GetValue(needed.A, monkeys);
+        var known = a
+            ?? GetValue(needed.B, monkeys)
+            ?? throw new ArgumentNullException(null, message: "Value from both monkeys is null.");
 
-        if (first is null)
-        {
-            var val = first;
-        }
-        else if (last is null)
-        {
-            var val = last;
-        } else
-        {
-            var val = 0;
-        }
-        return 0;
+        var newVal = SolveUnknown(monkey, known != a, known, val);
+        if (needed.Names.Contains("humn")) return newVal;
+        return GetHumnValue(known == a ? needed.B : needed.A, monkeys, newVal);
     }
 
-    private static Dictionary<string, long> InputValues { get; set; } = new Dictionary<string, long>();
-    private static long OutcomeTwo(IEnumerable<Monkey> monkeys)
-    {
-        var root = monkeys.First(m => m.Name == "root");
-        var monkeysNeeded = root.MonkeysNeeded();
-        var firstMonkey = monkeys.First(m => m.Name == monkeysNeeded.First());
-        var secondMonkey = monkeys.First(m => m.Name == monkeysNeeded.Last());
-        var first = GetValue(firstMonkey, monkeys);
-        var last = GetValue(secondMonkey, monkeys);
-        var values = new HashSet<long> { };
-
-        if (first is null)
-        {
-            var result = GetHumnValue(firstMonkey, monkeys);
-            return 0;
-        }
-        else
-        {
-            var result = GetHumnValue(secondMonkey, monkeys);
-            return result;
-        }
-        //var queue = new Queue<Monkey>();
-
-        //foreach (var monkey in monkeys)
-        //{
-        //    queue.Enqueue(monkey);
-        //}
-
-        //while (queue.Any())
-        //{
-        //    var current = queue.Dequeue();
-        //    if (current.Name == "root" && current.MonkeysNeeded().Any(m => InputValues.TryGetValue(m, out long _)))
-        //    {
-        //        break;
-        //    }
-        //    if (current.Name == "humn")
-        //    {
-        //        continue;
-        //    }
-        //    if (current.Outcome > 0)
-        //    {
-        //        continue;
-        //    }
-        //    if (current.Number > 0)
-        //    {
-        //        current.Outcome = current.Number;
-        //        InputValues.Add(current.Name, current.Outcome);
-        //        continue;
-        //    }
-
-        //    var monkeysNeeded = current.MonkeysNeeded();
-        //    if (monkeysNeeded.All(m => InputValues.TryGetValue(m, out long _)))
-        //    {
-        //        var outcome = Solve(current, InputValues[monkeysNeeded.First()], InputValues[monkeysNeeded.Last()]);
-        //        if (outcome > 0)
-        //        {
-        //            InputValues.Add(current.Name, outcome);
-        //        }
-        //        else
-        //        {
-        //            queue.Enqueue(current);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        queue.Enqueue(current);
-        //    }
-        //}
-
-        //var rootMonkeys = monkeys.First(m => m.Name == "root").MonkeysNeeded();
-        //var first = InputValues.TryGetValue(rootMonkeys.First(), out long val1);
-        //var second = InputValues.TryGetValue(rootMonkeys.Last(), out long val2);
-
-        //if (first)
-        //{
-        //    InputValues.Add(rootMonkeys.Last(), val1);
-        //}
-        //else
-        //{
-        //    InputValues.Add(rootMonkeys.First(), val2);
-        //}
-
-        //var firstMonkey = monkeys.First(m => m.MonkeysNeeded().Contains("humn"));
-        //var result = GetValue(firstMonkey, monkeys);
-
-        //TestContext.Progress.WriteLine($"Queue length is {queue.Count}");
-        //while (queue.Any())
-        //{
-        //    var current = queue.Dequeue();
-        //    TestContext.Progress.WriteLine($"Queue length is {queue.Count}");
-        //    TestContext.Progress.WriteLine($"Processing {current.Name}. {input.Count} items in list of {monkeys.Count()} monkeys.");
-        //    var monkeysNeeded = current.MonkeysNeeded();
-        //    if (monkeysNeeded.Any(m => input.TryGetValue(m, out long _) && input.TryGetValue(current.Name, out long _)))
-        //    {
-        //        current.Outcome = input[current.Name];
-        //        var left = input.TryGetValue(monkeysNeeded.First(), out long valLeft);
-        //        var right = input.TryGetValue(monkeysNeeded.Last(), out long valRight);
-        //        if (left)
-        //        {
-        //            var (monkey, outcome) = SolveTwo(current, monkeysNeeded, valLeft, null);
-        //            input.Add(monkey, outcome);
-        //        }
-        //        else
-        //        {
-        //            var (monkey, outcome) = SolveTwo(current, monkeysNeeded, null, valRight);
-        //            input.Add(monkey, outcome);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        queue.Enqueue(current);
-        //    }
-        //}
-        // Do Something
-        return InputValues["humn"];
-    }
-
+    private static Dictionary<string, long> InputValues { get; set; } = new();
     private static long? GetValue(Monkey monkey, IEnumerable<Monkey> monkeys)
     {
         if (monkey.Name == "humn") return null;
         if (monkey.Number > 0) return monkey.Number;
+        if (InputValues.TryGetValue(monkey.Name, out long v)) return v;
 
-        var neededMonkeys = monkey.MonkeysNeeded();
-        var left = neededMonkeys.First();
-        var right = neededMonkeys.Last();
+        var neededMonkeys = monkey.Needed(monkeys);
+        var a = InputValues.TryGetValue(neededMonkeys.A.Name, out long l) ? l : GetValue(neededMonkeys.A, monkeys);
+        var b = InputValues.TryGetValue(neededMonkeys.B.Name, out long r) ? r : GetValue(neededMonkeys.B, monkeys);
 
-        var leftVal = InputValues.TryGetValue(left, out long l) ? l : GetValue(monkeys.First(m => m.Name == left), monkeys);
-        var rightVal = InputValues.TryGetValue(right, out long r) ? r : GetValue(monkeys.First(m => m.Name == right), monkeys);
-
-        if (leftVal is null || rightVal is null) return null;
-        var answer = Solve(monkey, leftVal.Value, rightVal.Value);
+        if (a is null || b is null) return null;
+        var answer = Solve(monkey, a.Value, b.Value);
         InputValues.Add(monkey.Name, answer);
         return answer;
-        //var outcome = InputValues.TryGetValue(monkey.Name, out long o) ? o : 0;
-
-        //var solve = SolveThree(monkey, outcome, leftVal, rightVal, neededMonkeys);
-        //return InputValues.TryGetValue(monkey.Name, out long ou) ? ou : null;
     }
 
     private static long Solve(Monkey monkey, long one, long two)
-    {
-        var op = monkey.Expression!.Operator().First();
-        switch (op)
+        => monkey.Expression!.Operator().First() switch
         {
-            case "*":
-                monkey.Outcome = one * two;
-                break;
-            case "/":
-                monkey.Outcome = one / two;
-                break;
-            case "+":
-                monkey.Outcome = one + two;
-                break;
-            case "-":
-                monkey.Outcome = one - two;
-                break;
-            default:
-                break;
-        }
-        return monkey.Outcome;
-    }
+            "*" => one * two,
+            "/" => one / two,
+            "+" => one + two,
+            "-" => one - two,
+            _ => throw new NotSupportedException(),
+        };
 
-    private static (string, long) SolveTwo(Monkey monkey, string[] monkeysNeeded, long? one, long? two)
-    {
-        var op = monkey.Expression!.Operator().First();
-        switch (op)
+    private static long SolveUnknown(Monkey monkey, bool aIsNull, long aOrB, long c)
+        => (monkey.Name == "root" ? "=" : monkey.Expression!.Operator().First()) switch
         {
-            case "*":
-                if (one.HasValue)
-                {
-                    return (monkeysNeeded.Last(), monkey.Outcome / one.Value);
-                }
-                else
-                {
-                    return (monkeysNeeded.First(), monkey.Outcome / two.Value);
-                }
-            case "/":
-                if (one.HasValue)
-                {
-                    return (monkeysNeeded.Last(), monkey.Outcome * one.Value);
-                }
-                else
-                {
-                    return (monkeysNeeded.First(), monkey.Outcome * two.Value);
-                }
-            case "+":
-                if (one.HasValue)
-                {
-                    return (monkeysNeeded.Last(), monkey.Outcome - one.Value);
-                }
-                else
-                {
-                    return (monkeysNeeded.First(), monkey.Outcome - two.Value);
-                }
-            case "-":
-                if (one.HasValue)
-                {
-                    return (monkeysNeeded.Last(), monkey.Outcome + one.Value);
-                }
-                else
-                {
-                    return (monkeysNeeded.First(), monkey.Outcome + two.Value);
-                }
-            default:
-                return ("", 0);
-        }
-    }
-
-    private static long? SolveThree(Monkey monkey, long outcome, long? left, long? right, string[] monkeys)
-    {
-        if (outcome == 0)
-        {
-            if (!left.HasValue && !right.HasValue)
-            {
-                return null;
-            }
-            else
-            {
-                return Solve(monkey, left.Value, right.Value);
-            }
-        }
-        else
-        {
-            var op = monkey.Expression!.Operator().First();
-            if (left.HasValue)
-            {
-                switch (op)
-                {
-                    case "*":
-                        InputValues.Add(monkeys.Last(), outcome / left.Value);
-                        return outcome / left.Value;
-                    case "/":
-                        InputValues.Add(monkeys.Last(), outcome * left.Value);
-                        return outcome * left.Value;
-                    case "+":
-                        InputValues.Add(monkeys.Last(), outcome - left.Value);
-                        return outcome - left.Value;
-                    case "-":
-                        InputValues.Add(monkeys.Last(), outcome + left.Value);
-                        return outcome + left.Value;
-                    default:
-                        return null;
-                }
-            }
-            else
-            {
-                switch (op)
-                {
-                    case "*":
-                        InputValues.Add(monkeys.First(), outcome / right.Value);
-                        return outcome / right.Value;
-                    case "/":
-                        InputValues.Add(monkeys.First(), outcome * right.Value); // iets anders
-                        return outcome * right.Value;
-                    case "+":
-                        InputValues.Add(monkeys.First(), outcome - right.Value);
-                        return outcome - right.Value;
-                    case "-":
-                        InputValues.Add(monkeys.First(), outcome + right.Value); // Iets anders
-                        return outcome + right.Value;
-                    default:
-                        return null;
-                }
-            }
-        }
-    }
+            "*" => c / aOrB,
+            "/" => aIsNull ? c * aOrB : aOrB / c,
+            "+" => c - aOrB,
+            "-" => aIsNull ? c + aOrB : aOrB - c,
+            "=" => aOrB,
+            _ => throw new NotSupportedException(),
+        };
 }

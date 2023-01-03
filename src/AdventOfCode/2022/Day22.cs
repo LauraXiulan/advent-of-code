@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace AdventOfCode._2022;
 
-public class Day22 : Day<long, long>
+public class Day22 : Day<int, int>
 {
     public override string Example => @"        ...#    ,
         .#..    ,
@@ -21,15 +21,15 @@ public class Day22 : Day<long, long>
 10R5L5R10L4R5L5";
 
     [Test(ExpectedResult = 6032)]
-    public long One_Example() => One(Example);
+    public int One_Example() => One(Example);
 
     [Test(ExpectedResult = 55244)]
-    public override long One() => One(Input);
+    public override int One() => One(Input);
 
     [Test(ExpectedResult = 123149)]
-    public override long Two() => Two(Input);
+    public override int Two() => Two(Input);
 
-    private static long One(string input)
+    private static int One(string input)
     {
         var lines = input.GroupedLines(StringSplitOptions.None).ToArray();
         var trimmed = lines[0].Select(l => l.Replace(",", "")).ToArray();
@@ -38,7 +38,7 @@ public class Day22 : Day<long, long>
         return Move(grid, (state) => state.Step(state.Direction).Donut(grid));
     }
 
-    private static long Move(Grid grid, Func<State, State> offGrid)
+    private static int Move(Grid grid, Func<State, State> offGrid)
     {
         var index = 0;
         var state = new State(grid.Start, 'R');
@@ -57,19 +57,17 @@ public class Day22 : Day<long, long>
 
             if (index < grid.Turns.Length)
             {
-                state = state with { Direction = DetermineFacing(grid.Turns[index], state.Direction) };
+                state = state with { Direction = DetermineDirection(grid.Turns[index], state.Direction) };
             };
             index++;
         }
 
-        return Answer(state);
+        return state.Answer;
     }
 
     private static Dictionary<char, int> Dict => new() { { 'R', 0 }, { 'D', 1 }, { 'L', 2 }, { 'U', 3 } };
 
-    private static long Answer(State state) => 1000 * (state.Pos.Y + 1) + 4 * (state.Pos.X + 1) + Dict[state.Direction];
-
-    private static char DetermineFacing(char direction, char current)
+    private static char DetermineDirection(char direction, char current)
     {
         if (direction == 'R')
         {
@@ -87,7 +85,7 @@ public class Day22 : Day<long, long>
         }
     }
 
-    private static long Two(string input)
+    private static int Two(string input)
     {
         var lines = input.GroupedLines(StringSplitOptions.None).ToArray();
         var trimmed = lines[0].Select(l => l.Replace(",", "")).ToArray();
@@ -316,5 +314,7 @@ public class Day22 : Day<long, long>
             'U' => this with { Pos = new Point(Pos.X + 0, Pos.Y - 1) },
             _ => this,
         };
+
+        public int Answer => 1000 * (Pos.Y + 1) + 4 * (Pos.X + 1) + Dict[Direction];
     }
 }

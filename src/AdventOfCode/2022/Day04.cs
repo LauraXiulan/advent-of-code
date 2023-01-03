@@ -19,7 +19,7 @@ public class Day04 : Day<int, int>
     private static int One(string input)
         => input.Lines(line => line.Split(',')).Select(line =>
         {
-            var ranges = line.Int32s();
+            var ranges = line.Int32sWithoutNegatives();
             var firstLine = ranges.Take(2);
             var secondLine = ranges.Skip(2);
 
@@ -29,7 +29,7 @@ public class Day04 : Day<int, int>
     private static int Two(string input)
         => input.Lines(line => line.Split(',')).Select(line =>
         {
-            var ranges = line.Int32s();
+            var ranges = line.Int32sWithoutNegatives();
             var firstLine = ranges.Take(2);
             var secondLine = ranges.Skip(2);
 

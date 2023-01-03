@@ -4,7 +4,7 @@ namespace Text_specs;
 
 public class Int32s
 {
-    [TestCase("-3-", 3)]
+    [TestCase("-3", -3)]
     [TestCase("move 3 from 5 to 2", 3, 5, 2)]
     public void Takes_integers_out_of_a_string(string input, params int[] numbers)
         => input.Int32s().Should().BeEquivalentTo(numbers);
