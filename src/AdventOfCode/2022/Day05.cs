@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AdventOfCode._2022;
+﻿namespace AdventOfCode._2022;
 
 public class Day05 : Day<string, string>
 {
@@ -29,18 +27,18 @@ move 1 from 1 to 2";
 
     private static string One(string input)
     {
-        //var stacks = new List<Stack<char>>()
-        //{
-        //    new Stack<char>(new List<char> { 'B', 'W', 'N' }),
-        //    new Stack<char>(new List<char> { 'L', 'Z', 'S', 'P', 'T', 'D', 'M', 'B' }),
-        //    new Stack<char>(new List<char> { 'Q', 'H', 'Z', 'W', 'R' }),
-        //    new Stack<char>(new List<char> { 'W', 'D', 'V', 'J', 'Z', 'R' }),
-        //    new Stack<char>(new List<char> { 'S', 'H', 'M', 'B' }),
-        //    new Stack<char>(new List<char> { 'L', 'G', 'N', 'J', 'H', 'V', 'P', 'B' }),
-        //    new Stack<char>(new List<char> { 'J', 'Q', 'Z', 'F', 'H', 'D', 'L', 'S' }),
-        //    new Stack<char>(new List<char> { 'W', 'S', 'F', 'J', 'G', 'Q', 'B' }),
-        //    new Stack<char>(new List<char> { 'Z', 'W', 'M', 'S', 'C', 'D', 'J' }),
-        //}.ToArray();
+        var stacks = new List<Stack<char>>()
+        {
+            new Stack<char>(new List<char> { 'B', 'W', 'N' }),
+            new Stack<char>(new List<char> { 'L', 'Z', 'S', 'P', 'T', 'D', 'M', 'B' }),
+            new Stack<char>(new List<char> { 'Q', 'H', 'Z', 'W', 'R' }),
+            new Stack<char>(new List<char> { 'W', 'D', 'V', 'J', 'Z', 'R' }),
+            new Stack<char>(new List<char> { 'S', 'H', 'M', 'B' }),
+            new Stack<char>(new List<char> { 'L', 'G', 'N', 'J', 'H', 'V', 'P', 'B' }),
+            new Stack<char>(new List<char> { 'J', 'Q', 'Z', 'F', 'H', 'D', 'L', 'S' }),
+            new Stack<char>(new List<char> { 'W', 'S', 'F', 'J', 'G', 'Q', 'B' }),
+            new Stack<char>(new List<char> { 'Z', 'W', 'M', 'S', 'C', 'D', 'J' }),
+        }.ToArray();
 
         //var stacks = new List<Stack<char>>()
         //{
@@ -49,22 +47,24 @@ move 1 from 1 to 2";
         //    new Stack<char>(new List<char> { 'P' }),
         //}.ToArray();
 
-        var groupedLines = input.Replace("    [", "[0] [").Replace("]    ", "] [0]").GroupedLines().ToArray(); // Trims out spaces
-        var stacks = Enumerable.Range(0, groupedLines[0].Last().Int32s().Last()).Select(_ => new Stack<char>()).ToArray();
-        var lines = groupedLines[0].SkipLast(1).Reverse();
+        //var groupedLines = input.Replace("    [", "[0] [").Replace("]    ", "] [0]").GroupedLines().ToArray(); // Trims out spaces
+        //var stacks = Enumerable.Range(0, groupedLines[0].Last().Int32s().Last()).Select(_ => new Stack<char>()).ToArray();
+        //var lines = groupedLines[0].SkipLast(1).Reverse();
 
-        foreach (var line in lines)
-        {
-            var charArray = line.ToCharArray().Where(char.IsAsciiLetterOrDigit).ToArray();
+        //foreach (var line in lines)
+        //{
+        //    var charArray = line.ToCharArray().Where(char.IsAsciiLetterOrDigit).ToArray();
 
-            for (int i = 0; i < charArray.Length; i++)
-            {
-                if (char.IsAsciiLetter(charArray[i]))
-                {
-                    stacks[i].Push(charArray[i]);
-                }
-            }
-        }
+        //    for (int i = 0; i < charArray.Length; i++)
+        //    {
+        //        if (char.IsAsciiLetter(charArray[i]))
+        //        {
+        //            stacks[i].Push(charArray[i]);
+        //        }
+        //    }
+        //}
+
+        var groupedLines = input.GroupedLines().ToArray();
 
         var boxes = new Boxes(stacks);
         foreach (var instruction in groupedLines[1])
