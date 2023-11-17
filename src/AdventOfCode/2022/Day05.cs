@@ -29,15 +29,15 @@ move 1 from 1 to 2";
     {
         var stacks = new List<Stack<char>>()
         {
-            new Stack<char>(new List<char> { 'B', 'W', 'N' }),
-            new Stack<char>(new List<char> { 'L', 'Z', 'S', 'P', 'T', 'D', 'M', 'B' }),
-            new Stack<char>(new List<char> { 'Q', 'H', 'Z', 'W', 'R' }),
-            new Stack<char>(new List<char> { 'W', 'D', 'V', 'J', 'Z', 'R' }),
-            new Stack<char>(new List<char> { 'S', 'H', 'M', 'B' }),
-            new Stack<char>(new List<char> { 'L', 'G', 'N', 'J', 'H', 'V', 'P', 'B' }),
-            new Stack<char>(new List<char> { 'J', 'Q', 'Z', 'F', 'H', 'D', 'L', 'S' }),
-            new Stack<char>(new List<char> { 'W', 'S', 'F', 'J', 'G', 'Q', 'B' }),
-            new Stack<char>(new List<char> { 'Z', 'W', 'M', 'S', 'C', 'D', 'J' }),
+            new(new List<char> { 'B', 'W', 'N' }),
+            new(new List<char> { 'L', 'Z', 'S', 'P', 'T', 'D', 'M', 'B' }),
+            new(new List<char> { 'Q', 'H', 'Z', 'W', 'R' }),
+            new(new List<char> { 'W', 'D', 'V', 'J', 'Z', 'R' }),
+            new(new List<char> { 'S', 'H', 'M', 'B' }),
+            new(new List<char> { 'L', 'G', 'N', 'J', 'H', 'V', 'P', 'B' }),
+            new(new List<char> { 'J', 'Q', 'Z', 'F', 'H', 'D', 'L', 'S' }),
+            new(new List<char> { 'W', 'S', 'F', 'J', 'G', 'Q', 'B' }),
+            new(new List<char> { 'Z', 'W', 'M', 'S', 'C', 'D', 'J' }),
         }.ToArray();
 
         //var stacks = new List<Stack<char>>()
@@ -80,15 +80,15 @@ move 1 from 1 to 2";
     {
         var stacks = new List<Stack<char>>()
         {
-            new Stack<char>(new List<char> { 'B', 'W', 'N' }),
-            new Stack<char>(new List<char> { 'L', 'Z', 'S', 'P', 'T', 'D', 'M', 'B' }),
-            new Stack<char>(new List<char> { 'Q', 'H', 'Z', 'W', 'R' }),
-            new Stack<char>(new List<char> { 'W', 'D', 'V', 'J', 'Z', 'R' }),
-            new Stack<char>(new List<char> { 'S', 'H', 'M', 'B' }),
-            new Stack<char>(new List<char> { 'L', 'G', 'N', 'J', 'H', 'V', 'P', 'B' }),
-            new Stack<char>(new List<char> { 'J', 'Q', 'Z', 'F', 'H', 'D', 'L', 'S' }),
-            new Stack<char>(new List<char> { 'W', 'S', 'F', 'J', 'G', 'Q', 'B' }),
-            new Stack<char>(new List<char> { 'Z', 'W', 'M', 'S', 'C', 'D', 'J' }),
+            new(new List<char> { 'B', 'W', 'N' }),
+            new(new List<char> { 'L', 'Z', 'S', 'P', 'T', 'D', 'M', 'B' }),
+            new(new List<char> { 'Q', 'H', 'Z', 'W', 'R' }),
+            new(new List<char> { 'W', 'D', 'V', 'J', 'Z', 'R' }),
+            new(new List<char> { 'S', 'H', 'M', 'B' }),
+            new(new List<char> { 'L', 'G', 'N', 'J', 'H', 'V', 'P', 'B' }),
+            new(new List<char> { 'J', 'Q', 'Z', 'F', 'H', 'D', 'L', 'S' }),
+            new(new List<char> { 'W', 'S', 'F', 'J', 'G', 'Q', 'B' }),
+            new(new List<char> { 'Z', 'W', 'M', 'S', 'C', 'D', 'J' }),
         }.ToArray();
 
         //var stacks = new List<Stack<char>>()
@@ -110,14 +110,9 @@ move 1 from 1 to 2";
         return string.Join("", topBoxes);
     }
 
-    public class Boxes
+    public class Boxes(Stack<char>[] stacks)
     {
-        public Boxes(Stack<char>[] stacks)
-        {
-            Stacks = stacks;
-        }
-
-        public Stack<char>[] Stacks { get; internal set; }
+        public Stack<char>[] Stacks { get; internal set; } = stacks;
         public void Move(string instruction)
         {
             var instr = instruction.Int32s().ToArray();

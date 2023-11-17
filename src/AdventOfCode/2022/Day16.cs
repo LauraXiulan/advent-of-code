@@ -16,6 +16,8 @@ Valve HH has flow rate=22; tunnel leads to valve GG
 Valve II has flow rate=0; tunnels lead to valves AA, JJ
 Valve JJ has flow rate=21; tunnel leads to valve II";
 
+    private static readonly string[] Separator = ["\r\n", "\n"];
+
     [Test(ExpectedResult = 1651)]
     public int One_Example() => One(Example);
 
@@ -30,7 +32,7 @@ Valve JJ has flow rate=21; tunnel leads to valve II";
 
     private static int One(string input)
     {
-        var valves = input.Split(new[] { "\r\n", "\n" }, StringSplitOptions.TrimEntries).Select(l => new Valve(l));
+        var valves = input.Split(Separator, StringSplitOptions.TrimEntries).Select(l => new Valve(l));
         var updated = new List<Valve>();
         var importantConnections = valves.Where(i => i.FlowRate > 0 || i.Name == "AA").Select(r => r.Name);
         var distances = Distances(valves, importantConnections);
@@ -44,7 +46,7 @@ Valve JJ has flow rate=21; tunnel leads to valve II";
 
     private static int Two(string input)
     {
-        var valves = input.Split(new[] { "\r\n", "\n" }, StringSplitOptions.TrimEntries).Select(l => new Valve(l));
+        var valves = input.Split(Separator, StringSplitOptions.TrimEntries).Select(l => new Valve(l));
         var updated = new List<Valve>();
         var distances = Distances(valves, valves.Where(i => i.FlowRate > 0 || i.Name == "AA").Select(r => r.Name));
         updated.AddRange(valves.Select(v => GetDistance(v, distances)));
@@ -71,12 +73,12 @@ Valve JJ has flow rate=21; tunnel leads to valve II";
         var valveDistances = valves.First(v => v.Name == "AA").Distances
             .Select((d, i) => (d.Key, (BigInteger)Math.Pow(2, i)))
             .ToDictionary(x => x.Key, x => x.Item2);
-        var evaluate = new Dictionary<int, List<State>> { { 0, new List<State> { new State("AA", max) } } };
+        var evaluate = new Dictionary<int, List<State>> { { 0, new List<State> { new("AA", max) } } };
         var paths = new Dictionary<BigInteger, int>();
 
         for (int i = 0; i < valveDistances.Count; i++)
         {
-            evaluate[i + 1] = new List<State>();
+            evaluate[i + 1] = [];
             foreach (var state in evaluate[i])
             {
                 foreach (var n in valves.First(v => v.Name == state.Name).Distances)
@@ -125,7 +127,7 @@ Valve JJ has flow rate=21; tunnel leads to valve II";
             var distance = 0;
 
             distances[(valve.Name, valve.Name)] = 0;
-            while (current.Any())
+            while (current.Length != 0)
             {
                 distance++;
                 foreach (var position in current)
@@ -135,12 +137,12 @@ Valve JJ has flow rate=21; tunnel leads to valve II";
                         if (!distances.ContainsKey((valve.Name, newPosition)))
                         {
                             distances[(valve.Name, newPosition)] = distance;
-                            next = next.Append(newPosition).ToArray();
+                            next = [.. next, newPosition];
                         }
                     }
                 }
                 current = next;
-                next = Array.Empty<string>();
+                next = [];
             }
         }
         return distances;
@@ -151,7 +153,7 @@ Valve JJ has flow rate=21; tunnel leads to valve II";
         public string Name { get; set; }
         public int FlowRate { get; set; }
         public IEnumerable<string> Neighbors { get; set; }
-        public Dictionary<string, int> Distances { get; set; } = new();
+        public Dictionary<string, int> Distances { get; set; } = [];
 
         public Valve(string line)
         {

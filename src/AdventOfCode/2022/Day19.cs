@@ -19,13 +19,13 @@ Blueprint 2: Each ore robot costs 2 ore. Each clay robot costs 3 ore. Each obsid
 
     private static int One(string input)
         => input.Lines(print => new Blueprint(print))
-            .Select((b, index) => TryBuild(b, new(24, default, new(Ore: 1)), new()) * (index + 1))
+            .Select((b, index) => TryBuild(b, new(24, default, new(Ore: 1)), []) * (index + 1))
             .Sum();
 
     private static int Two(string input)
         => input.Lines(print => new Blueprint(print))
             .Take(3)
-            .Select((b, index) => TryBuild(b, new(32, default, new(Ore: 1)), new()))
+            .Select((b, index) => TryBuild(b, new(32, default, new(Ore: 1)), []))
             .Aggregate(1, (a, b) => a * b);
 
     private static int TryBuild(Blueprint print, State state, Dictionary<State, int> done)
@@ -49,7 +49,7 @@ Blueprint 2: Each ore robot costs 2 ore. Each clay robot costs 3 ore. Each obsid
 
     record struct Resource(int Ore = 0, int Clay = 0, int Obsidian = 0, int Geode = 0)
     {
-        public bool CanBuild(Robot robot) => Ore >= robot.Cost.Ore && Clay >= robot.Cost.Clay && Obsidian >= robot.Cost.Obsidian && Geode >= robot.Cost.Geode;
+        public readonly bool CanBuild(Robot robot) => Ore >= robot.Cost.Ore && Clay >= robot.Cost.Clay && Obsidian >= robot.Cost.Obsidian && Geode >= robot.Cost.Geode;
 
         public static Resource operator +(Resource l, Resource r) => new(l.Ore + r.Ore, l.Clay + r.Clay, l.Obsidian + r.Obsidian, l.Geode + r.Geode);
         public static Resource operator -(Resource l, Resource r) => new(l.Ore - r.Ore, l.Clay - r.Clay, l.Obsidian - r.Obsidian, l.Geode - r.Geode);
